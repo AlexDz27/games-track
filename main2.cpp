@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 int main() {
@@ -7,16 +9,20 @@ int main() {
   const string D2 = "d2";
   const string THIEF2 = "thief2";
 
-  string gamesThroughComma = D2;
-  string otherGames[] = {THIEF2};
-  for (string game: otherGames) {
-    gamesThroughComma += ", or " + game;
+  vector<string> games = {D2, THIEF2};
+  string gamesThroughComma = games[0];
+  for (int i = 1; i < games.size(); i++) {
+    gamesThroughComma += ", or " + games[i];
   }
 
   string chosenGame;
   string chooseGameMessage = "Choose "s + gamesThroughComma + ":";
   cout << chooseGameMessage << endl;
   getline(cin, chosenGame);
-  cout << chosenGame << endl;
-  // if (cho)
+  while (!(find(begin(games), end(games), chosenGame) != end(games))) {
+    cout << "Error: unknown game" << endl;
+
+    cout << chooseGameMessage << endl;
+    getline(cin, chosenGame);
+  }
 }
