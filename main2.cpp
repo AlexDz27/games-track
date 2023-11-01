@@ -2,7 +2,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-using namespace std;
+#include "functions.cpp"
+using std::string, std::vector, std::cout, std::endl;
+using namespace std::literals;
 
 int main() {
   // 1. Choose the game
@@ -17,12 +19,8 @@ int main() {
 
   string chosenGame;
   string chooseGameMessage = "Choose "s + gamesThroughComma + ":";
-  cout << chooseGameMessage << endl;
-  getline(cin, chosenGame);
-  while (!(find(begin(games), end(games), chosenGame) != end(games))) {
-    cout << "Error: unknown game" << endl;
 
-    cout << chooseGameMessage << endl;
-    getline(cin, chosenGame);
-  }
+  displayMessageUntilGameChosen(chooseGameMessage, games, chosenGame);
+
+  cout << "go next" << endl;
 }
