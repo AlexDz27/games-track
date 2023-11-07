@@ -6,25 +6,39 @@
 #include <fstream>
 #include "functions.cpp"
 using std::string, std::vector, std::cout, std::endl,
-std::atexit, std::ifstream;
+std::atexit, std::ifstream, std::ofstream, std::fstream;
 using namespace std::literals;
 
 const string FILE_NAME = "TIMES.txt";
 string chosenGame;
 
 void writeTime() {
-  ifstream file;
-  file.open(FILE_NAME);
+  // ifstream file(FILE_NAME);
+  // ofstream fileWriteStream(FILE_NAME);
+  fstream fileStream(FILE_NAME);
+  // file.open(FILE_NAME);
 
   string line;
-  while (getline(file, line)) {
+  while (getline(fileStream, line)) {
     vector<string> lineSplit = splitString(line, ":");
-    if (lineSplit[0] == chosenGame) {
-      cout << lineSplit[0] << endl;
+    string game = lineSplit[0];
+    fileStream.clear();
+    if (game == chosenGame) {
+      // cout << -std::ios::off_type(line.size()) - 1 << endl;
+      // cout << file.cur << endl;
+      // cout << line.size() << endl;
+
+      // file.seekp(-std::ios::off_type(line.size()) - 1, file.cur);
+      // file << "d2: 1";
+      // file << "d2: 12\n";
+      // cout << file.tellg() << endl;
+      fileStream.seekp(-9, std::ios_base::cur);
+      fileStream << "00:00:01";
+      break;  // TODO: maybe не нужен, тк уже есть file.clear()
     }
   }
 
-  file.close();
+  fileStream.close();
 }
 
 int main() {
