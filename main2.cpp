@@ -24,8 +24,7 @@ void writeTime() {
     string game = lineSplit[0];
     string gameTime = lineSplit[1];
     if (game == chosenGame) {
-      // TODO: грамотно надо отформатировать по формату 00:00:00
-      gameTime = to_string(stoi(gameTime) + (time(nullptr) - start));
+      gameTime = convertSecondsToFormattedTime(convertFormattedTimeToSeconds(gameTime) + (time(nullptr) - start));
       gamesWithTimes.push_back(game + ": " + gameTime + "\n");
     } else {
       gamesWithTimes.push_back(line + "\n");
