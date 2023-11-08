@@ -1,23 +1,59 @@
 #include <iostream>
 #include <string>
-using namespace std;
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+#include <fstream>
+#include "functions.cpp"
+using std::string, std::vector, std::cout, std::endl,
+std::ifstream, std::ofstream, std::to_string, std::ios;
+using namespace std::literals;
 
-#define GET_VAR_NAME(var) (#var)
+void writeTime(string chosenGame) {
+  const string FILE_NAME = "TIMES.txt";
+  ifstream fileStreamRead(FILE_NAME);
+  vector<string> gamesWithTimes;
 
-string s(char charStr[]) {
-  return string(charStr);
+  string line;
+  while (getline(fileStreamRead, line)) {
+    vector<string> lineSplit = splitString(line, ": ");
+    string game = lineSplit[0];
+    string gameTime = lineSplit[1];
+    if (game == chosenGame) {
+      gameTime = convertSecondsToFormattedTime(
+        convertFormattedTimeToSeconds(gameTime) + 1
+      );
+      gamesWithTimes.push_back(game + ": " + gameTime + "\n");
+    } else {
+      gamesWithTimes.push_back(line + "\n");
+    }
+  }
+  fileStreamRead.close();
+
+  ofstream fileStreamWrite(FILE_NAME, ios::trunc);
+  for (auto it : gamesWithTimes) {
+    fileStreamWrite << it;
+  }
+  fileStreamWrite.close();
 }
 
 int main() {
-  // 1. Choose the game
-  string d2 = "d2";
-  string thief2 = "thief2";
-  string chosenGame;
-  string gamesWithCommas;
-  string chooseGameMessage = "Choose "s + GET_VAR_NAME(d2) + " or " + ":";
-  cout << chooseGameMessage << endl;
-  getline(cin, chosenGame);
+  const string D2 = "d2";
+  const string THIEF2 = "thief2";
+  vector<string> games = {D2, THIEF2};
+  string gamesThroughComma = games[0];
+  for (int i = 1; i < games.size(); i++) {
+    gamesThroughComma += ", or " + games[i];
+  }
 
-  cout << chosenGame << endl;
-  cout << (chosenGame == "d2") << endl;
+  string chosenGame;
+  string chooseGameMessage = "Choose "s + gamesThroughComma + ":";
+  displayMessageUntilGameChosen(chooseGameMessage, games, chosenGame);
+
+  cout << "\n";
+  for (int i = 1; ; i++) {
+    _sleep(1000);
+    writeTime(chosenGame);
+    cout << "\r" << convertSecondsToFormattedTime(i);
+  }
 }

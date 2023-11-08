@@ -1,4 +1,0 @@
-1. choose option: d2 or thief2
-2. start program (then start the game)
-   Program counts the time
-3. On exit, write the time to the file   
