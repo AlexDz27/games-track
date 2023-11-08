@@ -6,15 +6,11 @@
 #include <fstream>
 #include "functions.cpp"
 using std::string, std::vector, std::cout, std::endl,
-std::atexit, std::ifstream, std::ofstream, std::to_string,
-std::ios;
+std::ifstream, std::ofstream, std::to_string, std::ios;
 using namespace std::literals;
 
-const string FILE_NAME = "TIMES.txt";
-string chosenGame;
-time_t start = time(nullptr);
-
-void writeTime() {
+void writeTime(string chosenGame) {
+  const string FILE_NAME = "TIMES.txt";
   ifstream fileStreamRead(FILE_NAME);
   vector<string> gamesWithTimes;
 
@@ -24,7 +20,9 @@ void writeTime() {
     string game = lineSplit[0];
     string gameTime = lineSplit[1];
     if (game == chosenGame) {
-      gameTime = convertSecondsToFormattedTime(convertFormattedTimeToSeconds(gameTime) + (time(nullptr) - start));
+      gameTime = convertSecondsToFormattedTime(
+        convertFormattedTimeToSeconds(gameTime) + 1
+      );
       gamesWithTimes.push_back(game + ": " + gameTime + "\n");
     } else {
       gamesWithTimes.push_back(line + "\n");
@@ -48,8 +46,14 @@ int main() {
     gamesThroughComma += ", or " + games[i];
   }
 
+  string chosenGame;
   string chooseGameMessage = "Choose "s + gamesThroughComma + ":";
   displayMessageUntilGameChosen(chooseGameMessage, games, chosenGame);
 
-  atexit(writeTime);
+  cout << "\n";
+  for (int i = 1; ; i++) {
+    _sleep(1000);
+    writeTime(chosenGame);
+    cout << "\r" << convertSecondsToFormattedTime(i);
+  }
 }
