@@ -10,7 +10,6 @@ std::ifstream, std::ofstream, std::to_string, std::ios;
 using namespace std::literals;
 
 // TODO: DAYS
-// TODO: prob del try
 void writeTime(string chosenGame) {
   const string FILE_NAME = "TIMES.txt";
   ifstream fileStreamRead(FILE_NAME);
@@ -40,28 +39,23 @@ void writeTime(string chosenGame) {
 }
 
 int main() {
-  try {
-    const string D2 = "d2";
-    const string THIEF2 = "thief2";
-    const string DM2 = "dm2";
-    vector<string> games = {D2, THIEF2, DM2};
-    string gamesThroughComma = games[0];
-    for (int i = 1; i < games.size(); i++) {
-      gamesThroughComma += ", or " + games[i];
-    }
+  const string D2 = "d2";
+  const string THIEF2 = "thief2";
+  const string DM2 = "dm2";
+  vector<string> games = {D2, THIEF2, DM2};
+  string gamesThroughComma = games[0];
+  for (int i = 1; i < games.size(); i++) {
+    gamesThroughComma += ", or " + games[i];
+  }
 
-    string chosenGame;
-    string chooseGameMessage = "Choose "s + gamesThroughComma + ":";
-    displayMessageUntilGameChosen(chooseGameMessage, games, chosenGame);
+  string chosenGame;
+  string chooseGameMessage = "Choose "s + gamesThroughComma + ":";
+  displayMessageUntilGameChosen(chooseGameMessage, games, chosenGame);
 
-    cout << "\n";
-    for (int i = 1; ; i++) {
-      _sleep(1000);
-      writeTime(chosenGame);
-      cout << convertSecondsToFormattedTime(i) << endl;
-    }
-  } catch (const std::exception &e) {
-    cout << e.what() << endl;
-    system("pause");
+  cout << "\n";
+  for (int i = 1; ; i++) {
+    _sleep(1000);
+    writeTime(chosenGame);
+    cout << "\r" + convertSecondsToFormattedTime(i);
   }
 }
