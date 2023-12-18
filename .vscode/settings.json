@@ -47,6 +47,10 @@
     "xmemory": "cpp",
     "xstddef": "cpp",
     "xtr1common": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "csignal": "cpp",
+    "ratio": "cpp",
+    "stop_token": "cpp",
+    "thread": "cpp"
   }
 }

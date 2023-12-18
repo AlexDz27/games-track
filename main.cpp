@@ -4,10 +4,16 @@
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
+#include <thread>
 #include "functions.cpp"
 using std::string, std::vector, std::cout, std::endl,
 std::ifstream, std::ofstream, std::to_string, std::ios;
 using namespace std::literals;
+
+bool weCount = true;
+void someT() {
+  if (std::cin.get() == '\n') weCount = false;
+}
 
 // TODO: DAYS
 void writeTime(string chosenGame) {
@@ -53,7 +59,13 @@ int main() {
   displayMessageUntilGameChosen(chooseGameMessage, games, chosenGame);
 
   cout << "\n";
+  std::thread worker(someT);
   for (int i = 1; ; i++) {
+    if (!weCount) {
+      // worker.join();
+      return 0;
+    }
+
     _sleep(1000);
     writeTime(chosenGame);
     cout << "\r" + convertSecondsToFormattedTime(i);
