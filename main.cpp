@@ -16,7 +16,7 @@ void someT() {
 }
 
 // TODO: DAYS
-void writeTime(string chosenGame) {
+void writeTime(string chosenGame, int seconds = 0) {
   const string FILE_NAME = "TIMES.txt";
   ifstream fileStreamRead(FILE_NAME);
   vector<string> gamesWithTimes;
@@ -26,9 +26,14 @@ void writeTime(string chosenGame) {
     vector<string> lineSplit = splitString(line, ": ");
     string game = lineSplit[0];
     string gameTime = lineSplit[1];
-    if (game == chosenGame) {
+    if (game == chosenGame && seconds == 0) {
       gameTime = convertSecondsToFormattedTime(
         convertFormattedTimeToSeconds(gameTime) + 1
+      );
+      gamesWithTimes.push_back(game + ": " + gameTime + "\n");
+    } else if (game == chosenGame && seconds != 0) {
+      gameTime = convertSecondsToFormattedTime(
+        convertFormattedTimeToSeconds(gameTime) + seconds
       );
       gamesWithTimes.push_back(game + ": " + gameTime + "\n");
     } else {
@@ -63,11 +68,11 @@ int main() {
   for (int i = 1; ; i++) {
     if (!weCount) {
       // worker.join();
+      writeTime(chosenGame, i);
       return 0;
     }
 
     _sleep(1000);
-    writeTime(chosenGame);
     cout << "\r" + convertSecondsToFormattedTime(i);
   }
 }
