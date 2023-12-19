@@ -7,16 +7,16 @@
 #include <thread>
 #include "functions.cpp"
 using std::string, std::vector, std::cout, std::endl,
-std::ifstream, std::ofstream, std::to_string, std::ios;
+std::ifstream, std::ofstream, std::to_string, std::ios,
+std::cin, std::thread;
 using namespace std::literals;
 
-bool weCount = true;
-void someT() {
-  if (std::cin.get() == '\n') weCount = false;
+bool continueCounting = true;
+void observeCancellation() {
+  if (cin.get() == '\n') continueCounting = false;
 }
 
-// TODO: DAYS
-void writeTime(string chosenGame, int seconds = 0) {
+void writeTime(string chosenGame, int seconds) {
   const string FILE_NAME = "TIMES.txt";
   ifstream fileStreamRead(FILE_NAME);
   vector<string> gamesWithTimes;
@@ -26,12 +26,7 @@ void writeTime(string chosenGame, int seconds = 0) {
     vector<string> lineSplit = splitString(line, ": ");
     string game = lineSplit[0];
     string gameTime = lineSplit[1];
-    if (game == chosenGame && seconds == 0) {
-      gameTime = convertSecondsToFormattedTime(
-        convertFormattedTimeToSeconds(gameTime) + 1
-      );
-      gamesWithTimes.push_back(game + ": " + gameTime + "\n");
-    } else if (game == chosenGame && seconds != 0) {
+    if (game == chosenGame) {
       gameTime = convertSecondsToFormattedTime(
         convertFormattedTimeToSeconds(gameTime) + seconds
       );
@@ -64,15 +59,14 @@ int main() {
   displayMessageUntilGameChosen(chooseGameMessage, games, chosenGame);
 
   cout << "\n";
-  std::thread worker(someT);
-  for (int i = 1; ; i++) {
-    if (!weCount) {
-      // worker.join();
-      writeTime(chosenGame, i);
-      return 0;
-    }
-
+  thread observeCancellationThread(observeCancellation);
+  int i = 1;
+  while (continueCounting) {
     _sleep(1000);
     cout << "\r" + convertSecondsToFormattedTime(i);
+    i++;
   }
+
+  observeCancellationThread.join();
+  writeTime(chosenGame, i);
 }

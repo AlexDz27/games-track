@@ -48,14 +48,26 @@ int convertFormattedTimeToSeconds(string formattedTime) {
   int takenHoursToSeconds = takenHours * 60 * 60;
   totalSeconds += takenHoursToSeconds;
 
+  vector<string> splitFormattedTimeWithDays = splitString(formattedTime, " ");
+  if (!splitFormattedTimeWithDays.empty()) {
+    vector<string> splitDays = splitString(splitFormattedTimeWithDays[0], "d");
+    int takenDays = stoi(splitDays[0]);
+    int takenDaysToSeconds = takenDays * 86400;
+    totalSeconds += takenDaysToSeconds;
+  }
+
   return totalSeconds;
 }
 
 string convertSecondsToFormattedTime(int seconds) {
-  int hours = seconds / 60 / 60;
+  int days = seconds / 60 / 60 / 24;
+  string daysString;
+  if (days > 0) daysString = to_string(days) + "d ";
+
+  int hours = seconds / 60 / 60 - days * 24;
   string hoursString = to_string(hours);
   if (hours < 10) hoursString = "0" + hoursString;
-  int secondsToConvertLeft = seconds - hours * 3600;
+  int secondsToConvertLeft = seconds - (hours + days * 24) * 3600;
 
   int minutes = secondsToConvertLeft / 60;
   string minutesString = to_string(minutes);
@@ -65,7 +77,7 @@ string convertSecondsToFormattedTime(int seconds) {
   string secondsString = to_string(secondsToConvertLeft);
   if (secondsToConvertLeft < 10) secondsString = "0" + secondsString;
 
-  return hoursString + ":" + minutesString + ":" + secondsString;
+  return daysString + hoursString + ":" + minutesString + ":" + secondsString;
 }
 
 void displayMessageUntilGameChosen(string &message, vector<string> &games, string &chosenGame) {
